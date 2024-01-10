@@ -1,0 +1,14 @@
+{
+  "manifestVersion": "3.0",
+  "id": "chronocat",
+  "name": "Chronocat",
+  "description": "小巧轻便的 Red 实现",
+  "version": "0.0.54",
+  "author": "Team Chrononeko",
+  "injections": [
+    {
+      "type": "main",
+      "script": "main.js"
+    }
+  ]
+}

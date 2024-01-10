@@ -1,0 +1,48 @@
+{
+  "name": "@chronocat/core",
+  "description": "小巧轻便的 Red 实现",
+  "version": "0.0.54",
+  "license": "AGPL-3.0",
+  "author": {
+    "name": "Il Harper",
+    "email": "hi@ilharper.com",
+    "url": "https://ilharper.com"
+  },
+  "main": "lib/index.js",
+  "typings": "lib/index.d.ts",
+  "files": [
+    "lib"
+  ],
+  "scripts": {
+    "build": "concurrently -n oapi,core yarn:oapi yarn:build:core",
+    "build:core": "yarn build:tjs && yarn build:ajv && concurrently -n cjs,dts yarn:build:cjs yarn:build:dts",
+    "build:dev": "yarn build:tjs && yarn build:ajv && yarn build:cjs",
+    "build:tjs": "ts-node -T scripts/tjs.cts",
+    "build:ajv": "ts-node -T scripts/ajv.cts",
+    "build:cjs": "ts-node -T ../../scripts/build.cts build",
+    "build:dts": "tsc -b tsconfig.json",
+    "oapi": "ts-node -T scripts/oapi.cts"
+  },
+  "devDependencies": {
+    "@chronocat/module-native": "0.0.40",
+    "@satorijs/element": "^2.5.1",
+    "@types/busboy": "^1.5.0",
+    "@types/js-yaml": "^4.0.6",
+    "@types/mime": "^3.0.1",
+    "@types/ws": "^8.5.5",
+    "ajv": "^8.12.0",
+    "ajv-cli": "^5.0.0",
+    "ajv-i18n": "^4.2.0",
+    "busboy": "^1.6.0",
+    "js-yaml": "^4.1.0",
+    "mime": "^3.0.0",
+    "miraigo": "0.0.39",
+    "node-fetch": "^3.3.2",
+    "protobufjs": "^7.2.5",
+    "tosource": "^2.0.0-alpha.3",
+    "ts-toolbelt": "^9.6.0",
+    "typescript-json-schema": "^0.61.0",
+    "utility-types": "^3.10.0",
+    "ws": "^8.13.0"
+  }
+}

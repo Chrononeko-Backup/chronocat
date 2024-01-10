@@ -1,0 +1,68 @@
+---
+title: 贡献
+---
+
+import Link from '@docusaurus/Link'
+import { AreaContribute } from '@site/src/components/AreaContribute'
+
+<AreaContribute />
+
+感谢你抽出时间贡献 Chronocat。以下是 Chronocat
+的总架构，你可以选择你希望改进的部分参与贡献。
+
+## 核心
+
+Chronocat 核心是 Chronocat 本体，使用 TypeScript 编写。Chronocat
+在缺失了下面任何模块的情况下均能正常运行，但缺失核心则无法运行。
+
+Chronocat 核心内包含了 Satori 服务和 RedProtocol
+服务的实现。如果你希望贡献 Satori 服务或 RedProtocol
+服务，你可以直接从核心开始。
+
+<Link
+  className="button button--secondary button--lg button--contribute"
+  to="/contribute/core"
+>
+  <span>前往核心</span>
+</Link>
+
+## Chronocat TDD
+
+Chronocat TDD 是一种 Chronocat
+独有的，特殊的贡献方式；它分离了消息结构的捕获和解析两个过程，使两个过程分别可以在联机和脱机环境下开发。
+
+如果你遇到了一些能够正常触发 RedProtocol 事件，但 Satori 未进行解析的消息，或
+RedProtocol 能够正常发送，而 Satori
+尚未支持的消息，那么你可以贡献这样的消息结构，之后我们会添加对于此消息的支持。消息结构的提供者在进行
+Chronocat TDD 贡献时全程无需编写代码；Satori 服务的开发者在进行 Chronocat TDD
+贡献时全程无需启动 QQ。
+
+<Link
+  className="button button--secondary button--lg button--contribute"
+  to="/contribute/tdd"
+>
+  <span>前往 Chronocat TDD</span>
+</Link>
+
+## 原生模块
+
+Chronocat 原生模块使用 C++ 编写，通过原生代码实现了一些
+Chronocat 核心无法实现的需求。
+
+<Link
+  className="button button--secondary button--lg button--contribute"
+  to="/contribute/native"
+>
+  <span>前往原生模块</span>
+</Link>
+
+---
+
+想要开发基于 Chronocat 的框架或适配器，而非 Chronocat 本身？请前往「开发」。
+
+<Link
+  className="button button--secondary button--lg button--develop"
+  to="/develop"
+>
+  <span>前往开发</span>
+</Link>

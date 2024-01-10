@@ -1,0 +1,9 @@
+{
+  "compilerOptions": {
+    "target": "es5",
+  },
+  "include": [
+    "satori.ts",
+    "satoriPlain.ts",
+  ]
+}

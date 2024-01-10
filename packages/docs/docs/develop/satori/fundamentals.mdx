@@ -1,0 +1,45 @@
+---
+title: 基础
+---
+
+import { AreaDevelop } from '@site/src/components/AreaDevelop'
+import { Constructing } from '@site/src/components/Constructing'
+
+<AreaDevelop />
+
+本节简单介绍了 Satori 的四个基础概念：资源、API、事件和消息。如果你希望以最快的速度接入
+Satori，那么本节内容可以跳过。否则，你应当快速浏览本节，这些概念对调用 API 或解析事件都很有帮助。
+
+除了在本站了解这些概念，你还可以前往 [Satori 官网](https://satori.js.org/zh-CN/) 进行更深入的了解。
+
+## 资源
+
+Satori 的功能由「资源」这一概念提供。下面这些元素构成了 Satori 的基础资源。
+
+<Constructing />
+
+## API
+
+对资源进行的操作称为 API。例如，发送消息的操作实际上是 **创建了一条消息**，因此我们可以调用 `message.create`
+来发送消息。以此类推，要撤回消息只需 `message.delete`，要获取消息只需调用 `message.get`。再以此类推，要获取频道信息只需
+`channel.get`，要获取群组信息只需 `guild.get`。Chronocat 已实现的 API 已在 [参考](/develop/satori/reference/api) 中列出。
+
+API 使用 HTTP 进行调用。调用统一使用 POST 方法，并以 Satori 协议的版本作为前缀，因此 `message.create` 调用时应当以 POST 方式请求
+`http://127.0.0.1:5500/v1/message.create`。如果你配置了 Chronocat 的鉴权，那么你还需要附加 `Authorization` 请求头，值为
+`Bearer `（注意后跟空格）加上 token。
+
+## 事件
+
+与 API 相对，事件是「其他人对资源的操作」。类比 API，收到消息实际上是 **他人创建了消息**，事件类型是 `message-created`。同理，类比
+API，消息被撤回就是 `message-deleted`。Chronocat 已实现的事件也已在 参考 中列出。
+
+事件需要使用 WebSocket 接收，端点为 `/v1/events`，只需创建 WebSocket 客户端并连接 `http://127.0.0.1:5500/v1/events`
+即可开始接收事件。如果你配置了 Chronocat 的鉴权，那么你还需要先发送一个鉴权对象才能开始接收消息，鉴权对象的结构为：
+
+<Constructing />
+
+## 消息
+
+收发消息是最常用的功能，而简洁的消息数据结构正是 Satori 的核心。
+
+<Constructing />

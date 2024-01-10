@@ -1,0 +1,177 @@
+openapi: 3.1.0
+info:
+  title: Chronocat Satori
+  version: 0.0.50
+  description: |
+    # Chronocat Satori OpenAPI 定义
+
+    这是一份 Chronocat Satori OpenAPI 的完整定义文件。
+
+    任何时候，你都可以从 <https://chronocat.vercel.app/openapi.yaml> 获取到此文件。
+
+  contact:
+    name: Team Chrononeko
+    url: https://github.com/chrononeko
+  license:
+    name: AGPL-3.0
+    url: https://www.gnu.org/licenses/agpl-3.0.html
+
+externalDocs:
+  description: Chronocat 文档
+  url: https://chronocat.vercel.app
+
+servers:
+  - url: '{protocol}://{host}:{port}/{version}'
+    description: Chronocat Satori 服务
+    variables:
+      protocol:
+        default: http
+      host:
+        default: localhost
+      port:
+        default: '5500'
+      version:
+        default: v1
+
+tags:
+  - name: Channel
+    description: 「频道」——消息的集合。不管文字还是语音都是在频道内发生的。
+    externalDocs:
+      description: 概念介绍
+      url: https://chronocat.vercel.app/develop/satori/fundamentals
+  - name: Guild
+    description: 「群组」——用户的集合。一个群组包含一组用户和一组频道。
+    externalDocs:
+      description: 概念介绍
+      url: https://chronocat.vercel.app/develop/satori/fundamentals
+  - name: GuildMember
+    description: 「群组成员」——用户在特定群组内的信息。
+    externalDocs:
+      description: 概念介绍
+      url: https://chronocat.vercel.app/develop/satori/fundamentals
+  - name: GuildRole
+    description: 「群组角色」——用户在群组内的角色或权限。
+    externalDocs:
+      description: 概念介绍
+      url: https://chronocat.vercel.app/develop/satori/fundamentals
+  - name: Login
+    description: 「登录信息」——实现侧当前的状态。
+    externalDocs:
+      description: 概念介绍
+      url: https://chronocat.vercel.app/develop/satori/fundamentals
+  - name: Message
+    description: 「消息」——频道中发送的内容。
+    externalDocs:
+      description: 概念介绍
+      url: https://chronocat.vercel.app/develop/satori/fundamentals
+  - name: Reaction
+    description: 「表态」——用户对消息的回应。
+    externalDocs:
+      description: 概念介绍
+      url: https://chronocat.vercel.app/develop/satori/fundamentals
+  - name: User
+    description: 「用户」——群组内的个体。
+    externalDocs:
+      description: 概念介绍
+      url: https://chronocat.vercel.app/develop/satori/fundamentals
+
+security:
+  - satori: []
+
+paths:
+  /:
+    get:
+      summary: Satori 欢迎页
+      description: 展示 Satori 欢迎页面。无任何实际用途。
+      responses:
+        '200':
+          description: 成功返回 Satori 欢迎页
+          content:
+            text/html:
+              schema:
+                type: string
+                const: <html>（Satori 欢迎页的 HTML 内容）</html>
+      security:
+        - {}
+
+  /assets/{assetData}:
+    get:
+      operationId: assets
+      summary: 获取单个资源
+      description: |
+        获取单个资源。该 URL 通常为 Satori 服务生成并在事件携带的消息元素中出现。
+        如果客户端无法通过此链接访问到 Chronocat Satori 服务，则需修改配置文件中的 `self_url` 项。
+      parameters:
+        - name: assetData
+          in: path
+          description: 资源信息。通常为 Satori 服务生成。
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: 成功获取资源
+          content:
+            '*/*': {}
+      security:
+        - {}
+
+  /login.get:
+    post:
+      operationId: loginGet
+      tags:
+        - Login
+      summary: 获取登录信息
+      description: 获取登录信息。
+      responses:
+        '200':
+          description: 成功获取登录信息
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Login'
+        '500':
+          $ref: '#/components/responses/500'
+
+  /message.create:
+    post:
+      operationId: messageCreate
+      tags:
+        - Message
+      summary: 发送消息
+      description: 发送一条消息。
+      requestBody:
+        description: 发送的目标和消息内容
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MessageCreatePayload'
+      responses:
+        '200':
+          description: 成功发送消息
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Message'
+        '500':
+          $ref: '#/components/responses/500'
+
+components:
+  securitySchemes:
+    satori:
+      description: Satori 服务密码
+      type: http
+      scheme: bearer
+      in: header
+      bearerFormat: string
+
+  responses:
+    '500':
+      description: Chronocat 内部错误 (500)
+      content:
+        text/plain:
+          schema:
+            type: string
+            const: 500 internal error

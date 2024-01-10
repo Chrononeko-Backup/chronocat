@@ -1,0 +1,98 @@
+---
+title: 使用 LiteLoaderQQNT（离线安装）
+---
+
+import Link from '@docusaurus/Link'
+import { UntrustedContents } from '@site/src/components/UntrustedContents'
+
+## 步骤 1：安装 LiteLoaderQQNT
+
+<UntrustedContents />
+
+LiteLoaderQQNT 提供了详细的安装教程，可以直接前往 LiteLoaderQQNT 的主页查看。
+
+<Link
+  className="button button--secondary button--lg"
+  to="https://llqqnt.mukapp.top"
+>
+  <span>前往 LiteLoaderQQNT</span>
+</Link>
+
+简单来说，从 [这里](https://github.com/LiteLoaderQQNT/LiteLoaderQQNT/releases) 下载最新版本的
+LiteLoaderQQNT，解压得到 LiteLoader 文件夹后扔进
+`C:\Program Files\Tencent\QQNT\resources\app` 目录，最后打开该目录（`resources\app`）下的
+`package.json` 文件，将 `main` 值修改为 `./LiteLoader` 即可，就像这样：
+
+```diff
+  {
+   ...
+   "homepage": "https://im.qq.com",
+   "sideEffects": true,
+-  "main": "./app_launcher/index.js",
++  "main": "./LiteLoader",
+   ...
+  }
+```
+
+:::tip[注意 QQ 的安装位置]
+
+上面我们将 LiteLoader 文件夹扔进了 `C:\Program Files\Tencent\QQNT\resources\app`
+目录，但如果你在安装 QQ 时修改了安装位置，或者你是从老版本的 QQ
+升级的，那么你需要将 `C:\Program Files\Tencent\QQNT` 这一部分替换为你实际的安装位置哦！
+
+:::
+
+:::tip[注意要编辑的 `package.json` 文件]
+
+LiteLoader 文件夹下也有一个 `package.json`，因此不要搞混：
+**要编辑的 `package.json` 文件在 `resources\app` 目录下，和 LiteLoader 文件夹同级哦！**
+
+:::
+
+:::tip[注意保存文件]
+
+编辑完 `package.json` 文件后，记得保存哦！
+
+:::
+
+结论：你已安装 LiteLoaderQQNT。
+
+## 步骤 2：安装 Chronocat
+
+前往下方的 Chronocat 下载页，下载最新版本的 Chronocat LiteLoaderQQNT
+插件。文件名应当类似 `chronocat-llqqnt-v0.0.0.zip`。
+
+<Link
+  className="button button--secondary button--lg"
+  to="https://github.com/chrononeko/chronocat/releases"
+>
+  <span>前往 Chronocat 下载页</span>
+</Link>
+
+下载完成后，将文件解压到 `文档/LiteLoaderQQNT/plugins`
+目录下。此时该目录下应当具有 `LiteLoaderQQNT-Plugin-Chronocat`
+文件夹。如果文件夹的名称不正确，你需要检查是否多解压或少解压了文件夹。
+
+![解压 LiteLoaderQQNT-Plugin-Chronocat 文件夹](llqqnt-airgap-extract.png)
+
+## 步骤 3：启动 QQ
+
+启动 QQ 并登录机器人的账号后，在左下角的菜单中点击「设置」。
+
+![「设置」](settings1.png)
+
+打开「LiteLoader 配置界面」，然后点击「插件列表」下方的「扩展」，确保 Chronocat
+已安装并已启动。
+
+![确保 Chronocat 已安装](llqqnt-ensure.png)
+
+结论：Chronocat 已成功安装在你的 QQ 上。
+
+接下来，你可以将 Chronocat 接入你喜爱的应用或框架。
+
+<Link
+  className="button button--secondary button--lg button--normal"
+  to="/connect"
+>
+  <span>前往接入</span>
+</Link>

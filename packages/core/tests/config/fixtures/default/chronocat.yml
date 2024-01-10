@@ -1,0 +1,18 @@
+# yaml-language-server: $schema=https://chronocat.vercel.app/config-v0.schema.json
+
+servers:
+  - type: red
+    token: DEFINE_CHRONO_TOKEN
+    port: 16530
+  - type: satori
+    token: DEFINE_CHRONO_TOKEN
+    port: 5500
+overrides:
+  10000:
+    servers:
+      - type: red
+        token: DEFINE_CHRONO_TOKEN
+        port: 16531
+      - type: satori
+        token: DEFINE_CHRONO_TOKEN
+        port: 5501

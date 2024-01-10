@@ -1,0 +1,533 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Chronocat Login</title>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Noto+Sans:wght@100;200;300;400;500;600;700;800;900&display=swap');
+
+      * {
+        box-sizing: border-box;
+        font-family: 'Noto Sans', sans-serif;
+      }
+
+      :root {
+        --bg: #618264;
+        --bg-second: white;
+        --on-bg: #d0e7d2;
+        --on-bg-second: #79ac78;
+      }
+
+      @media (prefers-color-scheme: light) {
+        :root {
+          --bg: #ffe4d6;
+          --bg-second: #b0578d;
+          --on-bg: #d988b9;
+          --on-bg-second: #facbea;
+        }
+      }
+
+      body {
+        background-color: var(--bg);
+        color: var(--on-bg);
+        font-weight: 400;
+        font-size: 1.5rem;
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+      }
+
+      .container > * {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+      }
+
+      input {
+        font-size: 1.2rem;
+        padding: 0.8rem 1.3rem;
+        border-radius: 10rem;
+        border: none;
+        outline: none;
+        margin: 0.5rem 0.2rem;
+        background-color: var(--bg-second);
+        color: var(--on-bg-second);
+      }
+
+      input::placeholder {
+        color: var(--on-bg-second);
+        opacity: 0.5;
+      }
+
+      button {
+        font-size: 1.2rem;
+        padding: 0.8rem 1.3rem;
+        border-radius: 10rem;
+        border: none;
+        outline: none;
+        margin: 0.5rem 0.2rem;
+        background-color: var(--bg-second);
+        color: var(--on-bg-second);
+        cursor: pointer;
+        transition: 0.2s;
+        filter: brightness(1.2);
+      }
+
+      button:hover {
+        opacity: 0.8;
+      }
+
+      button:active {
+        opacity: 0.7;
+        transform: scale(0.95);
+      }
+
+      .pagetitle {
+        position: absolute;
+        top: 1rem;
+        left: 1rem;
+        font-size: 1.2rem;
+        color: var(--on-bg);
+      }
+
+      *:not(input) {
+        user-select: none;
+      }
+
+      .hidden {
+        opacity: 0;
+        pointer-events: none;
+      }
+
+      .container > * {
+        position: absolute;
+        top: 0;
+        left: 20px;
+        width: calc(100% - 40px);
+      }
+
+      .manage .cont {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .cont .quicklogin,
+      .cont .qrcode {
+        background: var(--bg-second);
+        color: var(--on-bg-second);
+        padding: 1rem;
+        border-radius: 2rem;
+        height: 100%;
+
+        min-height: 200px;
+        min-width: 200px;
+      }
+
+      .quicklogin .quickloginSlot {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+        background: var(--bg);
+        color: var(--on-bg);
+        padding: 0.5rem 1rem;
+        border-radius: 10rem;
+        margin: 0.4em 0.8rem;
+        cursor: pointer;
+        transition: 0.2s;
+      }
+
+      .quicklogin .quickloginSlot:hover {
+        opacity: 0.9;
+      }
+
+      .quicklogin .quickloginSlot:active {
+        opacity: 0.8;
+      }
+
+      .quickloginSlot .name {
+        font-size: 1.2rem;
+        margin-right: 0.5rem;
+      }
+
+      .quickloginSlot .uid {
+        font-size: 1rem;
+        opacity: 0.8;
+      }
+
+      .qrcode .refreshQR {
+        margin: 0.5em;
+        height: 200px;
+        width: 200px;
+        cursor: pointer;
+        transition: 0.2s;
+        font-size: 0.7em;
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+        border: 1px solid var(--on-bg);
+        border-radius: 1rem;
+        background-size: contain;
+        background-position: center;
+        background-repeat: no-repeat;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="pagetitle">■ Chronocat Login</div>
+
+    <div class="container">
+      <div class="connectToServer">
+        <h1>Connect to Login Service</h1>
+        <div>
+          <input
+            type="text"
+            id="connectToInput"
+            placeholder="Server IP and Port"
+          />
+          <button id="connectToButton">Connect</button>
+        </div>
+        <div class="tips"></div>
+      </div>
+      <div class="connecting hidden">
+        <h1>Connecting</h1>
+      </div>
+      <div class="syncState hidden">
+        <h1>Synchronizing States</h1>
+      </div>
+      <div class="authorize hidden">
+        <h1>Authorize</h1>
+        <div>The server required you to authorize</div>
+        <div>
+          <input type="text" id="token" placeholder="[Your token]" />
+          <button id="authButton">Authorize</button>
+        </div>
+        <div class="tips"></div>
+      </div>
+
+      <div class="manage hidden">
+        <h1>Manage</h1>
+        <div class="cont">
+          <div class="quicklogin">
+            <div>
+              <big>
+                <b> QuickLogin </b>
+              </big>
+            </div>
+            <div id="quickLoginSlots"></div>
+          </div>
+          <div class="qrcode">
+            <div>
+              <big>
+                <b> QRCode </b>
+              </big>
+            </div>
+
+            <div class="refreshQR">
+              <span>Click here to get QRCode or refresh it</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="success hidden">
+        <h1>Server disconnected</h1>
+        <h2>Chronocat已成功登入QQ，登入伺服器服务中断。请参考文档"接入"的部份开始使用</h2>
+      </div>
+    </div>
+
+    <script>
+      const hashToken = location.hash.split('#')[1]?.split('@') ?? []
+
+      document.querySelector('#token').value =
+        localStorage.getItem('token') || hashToken[1] || ''
+      document.querySelector('#connectToInput').value =
+        localStorage.getItem('serverAddr') || hashToken[0] || ''
+
+      const switchToPage = (targetSelector) => {
+        return new Promise((rs) => {
+          // do animation with web animation api
+          const target = document.querySelector(targetSelector)
+          const current = document.querySelector('.container>*:not(.hidden)')
+
+          if (current === target) {
+            rs()
+            return
+          }
+
+          const currentAnim = current.animate(
+            [
+              {
+                transform: 'translateX(0)',
+                opacity: 1,
+              },
+              {
+                transform: 'translateX(-10%)',
+                opacity: 0,
+              },
+            ],
+            {
+              duration: 300,
+              easing: 'ease-in-out',
+              fill: 'forwards',
+            },
+          )
+          const targetAnim = target.animate(
+            [
+              {
+                transform: 'translateX(10%)',
+                opacity: 0,
+              },
+              {
+                transform: 'translateX(0)',
+                opacity: 1,
+              },
+            ],
+            {
+              duration: 300,
+              easing: 'ease-in-out',
+              fill: 'forwards',
+            },
+          )
+
+          currentAnim.onfinish = () => {
+            current.classList.add('hidden')
+            target.classList.remove('hidden')
+            rs()
+          }
+        })
+      }
+
+      let serverAddr = null
+
+      const alertConnectToServer = (msg) => {
+        document.querySelector('.connectToServer .tips').innerText = msg
+        switchToPage('.connectToServer')
+      }
+
+      const alertAuthorize = (msg) => {
+        document.querySelector('.authorize .tips').innerText = msg
+        switchToPage('.authorize')
+      }
+
+      let state = null
+      let storedToken = null
+
+      const authed = (reqOptions = {}) => ({
+        ...reqOptions,
+        headers: {
+          ...reqOptions.headers,
+          Authorization: `Bearer ${storedToken}`,
+        },
+      })
+
+      const updateStatesWithToken = async (token) => {
+        try {
+          const res = await fetch(`http://${serverAddr}/login/states`, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          })
+
+          if (res.status === 401) return false
+
+          const statesRes = await res.json()
+
+          if (JSON.stringify(statesRes) === JSON.stringify(state)) return true
+
+          state = statesRes
+
+          const quickLoginSlots = document.querySelector('#quickLoginSlots')
+          quickLoginSlots.innerHTML =
+            state.quickLoginAccounts
+              ?.map(({ name, id }) => {
+                name = name.replace(/</g, '&lt;').replace(/>/g, '&gt;')
+                id = parseInt(id)
+
+                return `
+            <div class="quickloginSlot" onclick='globalThis.loginAs(${id})'>
+                <span class="name">
+                    ${name}
+                </span>
+                <span class="uid">
+                    ${id}
+                </span>
+            </div>
+            `
+              })
+              .join('') ?? 'Not available'
+
+          const qrcode = state.qrcode
+          if (qrcode === null);
+          else if (qrcode === '"pending"') {
+            document.querySelector('.refreshQR').style.backgroundImage = ''
+            document.querySelector('.refreshQR span').innerText = 'Pending'
+          } else {
+            document.querySelector(
+              '.refreshQR',
+            ).style.backgroundImage = `url(${qrcode})`
+            document.querySelector('.refreshQR span').innerText = ''
+          }
+        } catch (e) {
+          console.error('Failed to update states: ', e)
+          return false
+        }
+
+        return true
+      }
+
+      globalThis.loginAs = async (id) => {
+        await fetch(
+          `http://${serverAddr}/login/quickLogin`,
+          authed({
+            method: 'POST',
+            body: JSON.stringify({
+              id,
+            }),
+          }),
+        )
+        switchToPage('.success')
+        flagUpdateLoop = false
+      }
+
+      const updateStates = async () => {
+        if (!(await updateStatesWithToken(storedToken))) {
+          flagUpdateLoop = false
+          switchToPage('.success')
+        }
+      }
+
+      let flagUpdateLoop = false
+      const startStateUpdateLoop = async () => {
+        if (flagUpdateLoop) return
+        flagUpdateLoop = true
+        while (flagUpdateLoop) {
+          await updateStates()
+          await new Promise((rs) => setTimeout(rs, 300))
+        }
+      }
+
+      const checkServerAvailable = async () => {
+        try {
+          const res = await Promise.race([
+            fetch(`http://${serverAddr}/login/available`),
+            new Promise((rs, rj) => {
+              setTimeout(() => {
+                rj('timeout')
+              }, 2000)
+            }),
+          ])
+          if (res.status === 200) {
+            localStorage.setItem('serverAddr', serverAddr)
+            await switchToPage('.syncState')
+            try {
+              const defaultToken = hashToken[1]
+              await updateStatesWithToken(defaultToken)
+              storedToken = defaultToken
+              startStateUpdateLoop()
+              await switchToPage('.manage')
+              return true
+            } catch (e) {
+              await switchToPage('.authorize')
+              return true
+            }
+            return true
+          }
+        } catch (e) {
+          console.error('Failed to connect: ', e)
+        }
+
+        alertConnectToServer('Server not available, see console for details')
+        await switchToPage('.connectToServer')
+        return false
+      }
+      const connectToServer = async () => {
+        const addr = document.querySelector('#connectToInput').value
+        if (!addr) {
+          alertConnectToServer('Please enter a server address')
+          return
+        }
+        const match = addr.match(/^(https?:\/\/)?([^\/:]+)(:\d+)?/)
+        const addrParsed = match[2] + (match[3] || ':16340')
+        if (!match) {
+          alertConnectToServer('Invalid server address')
+          return
+        }
+
+        serverAddr = addrParsed
+        await switchToPage('.connecting')
+        await checkServerAvailable()
+      }
+
+      document
+        .querySelector('#connectToButton')
+        .addEventListener('click', connectToServer)
+      document
+        .querySelector('#connectToInput')
+        .addEventListener('keydown', (e) => {
+          if (e.key === 'Enter') {
+            connectToServer()
+          }
+        })
+
+      const authorize = async () => {
+        await switchToPage('.connecting')
+        const newToken = document.querySelector('#token').value
+        if (!newToken) {
+          alertAuthorize('Please enter a token')
+          return
+        }
+
+        try {
+          await switchToPage('.syncState')
+          await updateStatesWithToken(newToken)
+          storedToken = newToken
+          localStorage.setItem('token', newToken)
+          await switchToPage('.manage')
+          startStateUpdateLoop()
+        } catch (e) {
+          console.error('Failed to authorize: ', e)
+          alertAuthorize('Failed to authorize, see console for details')
+        }
+      }
+
+      document.querySelector('#authButton').addEventListener('click', authorize)
+      document.querySelector('#token').addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+          authorize()
+        }
+      })
+
+      const checkQR = async () => {
+        try {
+          const res = await fetch(`http://${serverAddr}/login/qrcode`, authed())
+          const qrcode = await res.text()
+          await updateStates()
+
+          if (qrcode === '"pending"') {
+            document.querySelector('.refreshQR').style.backgroundImage = ''
+            document.querySelector('.refreshQR span').innerText = 'Pending'
+          } else {
+            document.querySelector(
+              '.refreshQR',
+            ).style.backgroundImage = `url(${qrcode})`
+            document.querySelector('.refreshQR span').innerText = ''
+          }
+        } catch (e) {
+          console.error('Failed to get QRCode: ', e)
+          document.querySelector('.refreshQR span').innerText = 'Failed'
+          return
+        }
+      }
+      document.querySelector('.refreshQR').addEventListener('click', checkQR)
+    </script>
+  </body>
+</html>

@@ -1,0 +1,125 @@
+function waitForFunction(y, m = 100) {
+  return new Promise((s) => {
+    let e
+    const check = () => {
+      let d = y()
+      d && (clearInterval(e), s(d))
+    }
+    e = setInterval(check, m)
+  })
+}
+
+function waitForElement(y, m = 100) {
+  return waitForFunction(() => document.querySelector(y), m)
+}
+
+void (async () => {
+  const sendMessageBack = (type, data) => {
+    ipcRenderer.send('chronocat', JSON.parse(JSON.stringify({ type, data })))
+  }
+
+  try {
+    const sleep = (ms) => new Promise((rs) => setTimeout(rs, ms))
+    await sleep(100)
+
+    // const autoLoginPanel = document.querySelector('.auto-login')
+    // const scanPanel = document.querySelector('.scan')
+
+    let idIndex = 1
+
+    const getUinByAvatarPath = (path) => idIndex++ // path.split('/Data/')[1].split('/')[0]
+
+    let qrcodeRefreshHandler = null
+    window.getQRCode = async () => {
+      try {
+        const newAccountBtn = document.querySelector('[aria-label="添加账号"]')
+        if (newAccountBtn) newAccountBtn.click()
+        const qrcodeElement = await waitForElement('.qr-code-img > img')
+        const qrcode = qrcodeElement.src
+        sendMessageBack('qrcode', qrcode)
+
+        if (qrcodeRefreshHandler) clearInterval(qrcodeRefreshHandler)
+        qrcodeRefreshHandler = setInterval(async () => {
+          const refreshBtn =
+            document.querySelector('.refresh')?.firstElementChild
+          if (refreshBtn) {
+            refreshBtn.click()
+            await sleep(100)
+          }
+
+          const qrcodeElement = await waitForElement('.qr-code-img > img')
+          sendMessageBack('qrcode', qrcodeElement.src)
+        }, 400)
+      } catch (e) {
+        sendMessageBack('error', e.message + '  ' + e.stack + '  ')
+      }
+    }
+
+    const moreAccountBtn = document.querySelector('[aria-label="更多账号"]')
+
+    if (moreAccountBtn) {
+      moreAccountBtn.click()
+      await sleep(100)
+      const loginList = [
+        ...(await waitForElement('.manage-account')).children,
+      ].map((v) => ({
+        name: v.querySelector('.process-txt').innerText,
+        id: getUinByAvatarPath(
+          v.querySelector('.avatar').style.backgroundImage,
+        ),
+        login: () => v.firstElementChild.click(),
+      }))
+
+      window.quickLogin = (id) => {
+        try {
+          const account = loginList.find((v) => v.id === id)
+          if (account) account.login()
+          else sendMessageBack('quickloginError', 'account not found')
+        } catch (e) {
+          sendMessageBack('error', e.message + '  ' + e.stack + '  ')
+        }
+      }
+
+      sendMessageBack('quickloginList', loginList)
+    } else {
+      await sleep(100)
+      window.quickLogin = () => {
+        try {
+          // document
+          //   .evaluate('//span[text()="登录"]', document)
+          //   .iterateNext()
+          //   .parentElement.parentElement.click()
+
+          let el = document
+            .evaluate('//span[text()="登录"]', document)
+            .iterateNext()
+          while (true) {
+            if (!el) {
+              sendMessageBack('error', 'cannot find single quick login btn')
+              break
+            }
+
+            if (el.nodeName === 'BUTTON') {
+              el.click()
+              break
+            } else el = el.parentElement
+          }
+        } catch (e) {
+          sendMessageBack('error', e.message + '  ' + e.stack + '  ')
+        }
+      }
+
+      if (document.querySelector('.name'))
+        sendMessageBack('quickloginList', [
+          {
+            name: document.querySelector('.name').innerText,
+            id: getUinByAvatarPath(
+              document.querySelector('.avatar').style.backgroundImage,
+            ),
+          },
+        ])
+    }
+  } catch (e) {
+    sendMessageBack('error', e.message + '  ' + e.stack + '  ')
+  }
+})()

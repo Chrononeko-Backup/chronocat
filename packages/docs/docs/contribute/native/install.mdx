@@ -1,0 +1,56 @@
+---
+title: 准备
+sidebar_position: 2
+---
+
+import { AreaContribute } from '@site/src/components/AreaContribute'
+
+<AreaContribute />
+
+## 开始之前
+
+以下几件事需要你先了解。
+
+### 构建工具
+
+我们使用 CMake 作为顶级构建工具，而非 cmake-js。
+
+:::tip[为什么是 CMake？]
+
+使用 CMake 作为顶级构建工具可以获得最好的 IDE
+支持。如 CLion 会托管 CMake 的执行，且不可变更；如果使用
+cmake-js 作为顶级构建工具，CLion 将无法正确地生成项目。
+
+:::
+
+### 库
+
+[Node-API](https://nodejs.org/dist/latest/docs/api/n-api.html)
+和 [node-addon-api](https://github.com/nodejs/node-addon-api)
+可供使用。尽量避免使用 Node-API 以外的 API，因为它们没有
+[ABI 稳定性保证](https://nodejs.org/en/docs/guides/abi-stability/)。
+
+## 环境要求
+
+这些工具应当预先被安装：
+
+- Visual Studio Build Tools
+
+这些工具应当位于 **系统环境变量** 中：
+
+- node
+- yarn
+
+这些工具应当位于构建时环境变量中：
+
+- cmake
+
+通常，构建时环境变量会由 IDE 提供，无需添加至系统环境变量。
+
+## 开始
+
+启动你的 IDE，并直接在 IDE 中打开项目的 **根目录**。CMake 会按顺序处理：
+
+1. Node 包的安装
+1. Node 和 Electron 的头文件/库文件的下载和引入
+1. 主项目和依赖项目的生成

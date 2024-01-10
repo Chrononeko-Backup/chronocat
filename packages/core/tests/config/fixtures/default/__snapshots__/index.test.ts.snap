@@ -1,0 +1,49 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`配置文件解析器应当正确解析 默认配置文件 1`] = `
+{
+  "enable": true,
+  "servers": [
+    {
+      "enable": true,
+      "listen": "0.0.0.0",
+      "port": 16530,
+      "token": "DEFINE_CHRONO_TOKEN",
+      "type": "red",
+    },
+    {
+      "enable": true,
+      "listen": "0.0.0.0",
+      "platform": "chronocat",
+      "port": 5500,
+      "self_url": "https://chronocat.vercel.app",
+      "token": "DEFINE_CHRONO_TOKEN",
+      "type": "satori",
+    },
+  ],
+}
+`;
+
+exports[`配置文件解析器应当正确解析 默认配置文件 2`] = `
+{
+  "enable": true,
+  "servers": [
+    {
+      "enable": true,
+      "listen": "0.0.0.0",
+      "port": 16531,
+      "token": "DEFINE_CHRONO_TOKEN",
+      "type": "red",
+    },
+    {
+      "enable": true,
+      "listen": "0.0.0.0",
+      "platform": "chronocat",
+      "port": 5501,
+      "self_url": "https://chronocat.vercel.app",
+      "token": "DEFINE_CHRONO_TOKEN",
+      "type": "satori",
+    },
+  ],
+}
+`;

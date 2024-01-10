@@ -1,0 +1,56 @@
+---
+title: 开始
+sidebar_position: 1
+---
+
+import Link from '@docusaurus/Link'
+import { AreaContribute } from '@site/src/components/AreaContribute'
+
+<AreaContribute />
+
+Chronocat TDD 是一种 Chronocat
+独有的，特殊的贡献方式；它分离了消息结构的捕获和解析两个过程，使两个过程分别可以在联机和脱机环境下开发。
+
+## Chronocat TDD 工作流
+
+Chronocat TDD 可以简要地分为三个步骤，我们将逐一介绍。
+
+### 1. 贡献消息结构
+
+如果你遇到了下面的情况之一：
+
+- Red 服务收到了一个事件，但 Satori 服务并未收到
+- Red 支持发送某类消息，但 Satori 尚未支持
+
+遇到这种情况，你就可以贡献消息结构了。
+
+一般来讲，你需要在 Chronocat 项目的 `packages/core/tests` 目录里的 `parser` 或 `messager`
+文件夹添加测试用例；如果你不会编写代码，那么直接在 BugTracker 上新增一个
+Issue，并贴上你截获的数据结构即可。提交数据前记得先脱敏。
+
+### 2. 完善测试用例
+
+确认了新的数据之后，Chronocat 维护者会编写对应的测试用例。此时，测试并不会通过，因为还没有相应的实现。
+
+任何时候，你都可以审阅这些测试用例，并进行完善，力求覆盖每一种情况。测试用例位于 `packages/core/tests` 目录。
+
+### 3. 编写实现
+
+接下来只剩编写对应的实现了。在编写实现的过程中，开发者无需接入 QQ 进行调试，只需要确保测试用例能够通过即可。
+
+## 测试架构
+
+Chronocat 使用 [Jest](https://jestjs.io/zh-Hans) 进行单元测试。Jest 提供了优秀的模拟函数 API，这在编写 Satori
+消息编码器的测试用例时十分有用。此外，Jest
+还提供了快照测试功能，使得消息编码器的编码结果可以以快照的方式自动存储在项目内，大大提高了测试用例的编写效率。
+
+此外，Chronocat 使用 Codecov 审阅测试覆盖。你可以在 Codecov 上的 Chronocat 查看每一个提交和 PR 的测试覆盖率：
+
+<Link
+  className="button button--secondary button--lg"
+  to="https://app.codecov.io/gh/chrononeko/chronocat"
+>
+  <span>Codecov 上的 Chronocat</span>
+</Link>
+
+在 Codecov 上可以直观地看到哪些代码未被覆盖，方便你针对性地完善测试用例。
